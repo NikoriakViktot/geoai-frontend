@@ -16,7 +16,8 @@ type LayerRec = {
     flood?: string | null;
 };
 
-const TC_BASE = "https://geohydroai.org/tc";
+// src/App.tsx
+const TC_BASE = import.meta.env.DEV ? "/tc" : "https://geohydroai.org/tc";
 const MAPBOX_TOKEN = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "";
 
 /* ---------- styles (dark) ---------- */
@@ -173,10 +174,9 @@ export default function App() {
     const layers = useMemo(() => {
         const L: any[] = [];
 
-        // спільні налаштування для усунення мерехтіння
         const COMMON_TILE_PROPS: any = {
             minZoom: 0,
-            maxZoom: 16,                 // піджени під макс. рівень свого тайл-сервера
+            maxZoom: 16,
             tileSize: 256,
             refinementStrategy: "no-overlap",
             pickable: false
@@ -189,10 +189,10 @@ export default function App() {
                 ...COMMON_TILE_PROPS,
                 visible: showDem,
                 renderSubLayers: (props: any) => {
-                    const bb = props.tile.boundingBox;
-                    return new BitmapLayer(props, {
+                    const bb = props.tile.boundingBox as [[number,number],[number,number]];
+                    return new BitmapLayer({
                         id: `${props.id}-bmp`,
-                        data: null,
+                        // ВАЖЛИВО: НЕ передавати props у конструктор і НЕ задавати data
                         image: props.data,
                         bounds: [bb[0][0], bb[0][1], bb[1][0], bb[1][1]],
                         opacity: opacityDEM,
@@ -209,10 +209,9 @@ export default function App() {
                 ...COMMON_TILE_PROPS,
                 visible: showFloodA,
                 renderSubLayers: (props: any) => {
-                    const bb = props.tile.boundingBox;
-                    return new BitmapLayer(props, {
+                    const bb = props.tile.boundingBox as [[number,number],[number,number]];
+                    return new BitmapLayer({
                         id: `${props.id}-bmp`,
-                        data: null,
                         image: props.data,
                         bounds: [bb[0][0], bb[0][1], bb[1][0], bb[1][1]],
                         opacity: opacityA,
@@ -229,10 +228,9 @@ export default function App() {
                 ...COMMON_TILE_PROPS,
                 visible: showFloodB,
                 renderSubLayers: (props: any) => {
-                    const bb = props.tile.boundingBox;
-                    return new BitmapLayer(props, {
+                    const bb = props.tile.boundingBox as [[number,number],[number,number]];
+                    return new BitmapLayer({
                         id: `${props.id}-bmp`,
-                        data: null,
                         image: props.data,
                         bounds: [bb[0][0], bb[0][1], bb[1][0], bb[1][1]],
                         opacity: opacityB,
@@ -244,7 +242,6 @@ export default function App() {
 
         return L;
     }, [demUrl, floodUrlA, floodUrlB, showDem, showFloodA, showFloodB, opacityDEM, opacityA, opacityB]);
-
     /* ---------- render ---------- */
     return (
         <div style={{height:"100vh", width:"100vw"}}>
