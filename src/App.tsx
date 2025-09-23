@@ -19,12 +19,7 @@ type LayerRec = {
 // src/App.tsx
 const TC_BASE = import.meta.env.DEV ? "/tc" : "https://geohydroai.org/tc";
 const MAPBOX_TOKEN = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "";
-if (!MAPBOX_TOKEN) {
-    console.error("VITE_MAPBOX_TOKEN is empty at build time");
-    return <div style={{padding:20,color:"#fff",background:"#111"}}>
-        Missing Mapbox token. Set VITE_MAPBOX_TOKEN and rebuild.
-    </div>;
-}
+
 
 /* ---------- styles (dark) ---------- */
 const panelStyle: React.CSSProperties = {
