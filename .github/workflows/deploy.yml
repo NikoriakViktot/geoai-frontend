@@ -1,0 +1,53 @@
+name: Build & Deploy Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: geoai-frontend-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted  # наш runner на сервері
+
+    env:
+      VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+      RELEASE_ROOT: /var/www/geoai-front/releases
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps (clean)
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Set release timestamp
+        id: vars
+        run: echo "ts=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Ship build to release dir
+        run: |
+          sudo mkdir -p "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}"
+          sudo rsync -a --delete dist/ "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}/"
+
+      - name: Switch current symlink atomically
+        run: |
+          sudo ln -sfn "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}" /var/www/geoai-front/current
+          # Прибрати дуже старі релізи (старші 30 днів) — опційно
+          sudo find "$RELEASE_ROOT" -mindepth 1 -maxdepth 1 -type d -mtime +30 -print0 | sudo xargs -0 -r rm -rf
+
+      - name: Reload Nginx
+        run: |
+          sudo docker exec geoai-nginx nginx -s reload || sudo docker restart geoai-nginx
