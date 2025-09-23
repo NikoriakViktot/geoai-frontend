@@ -167,9 +167,9 @@ export default function App(): JSX.Element {
 
     /* ---------- UI state ---------- */
     // DEM
-    const [demName, setDemName] = useState<string>("");
-    const [showDem, setShowDem] = useState<boolean>(false);
-    const [opacityDEM, setOpacityDEM] = useState<number>(0.30);
+    const [demName, setDemName] = useState<string>("alos_dem");
+    const [showDem, setShowDem] = useState<boolean>(true);
+    const [opacityDEM, setOpacityDEM] = useState<number>(0.15);
     const demCmap = "terrain" as const;
     const demStretch: readonly [number, number] = [250, 2200];
 
