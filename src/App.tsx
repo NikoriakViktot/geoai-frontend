@@ -4,6 +4,7 @@
 // src/App.tsx
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import DeckGL from "@deck.gl/react";
+import type { JSX } from "react";
 import { BitmapLayer } from "@deck.gl/layers";
 import { TileLayer, type TileLayerProps } from "@deck.gl/geo-layers";
 import Map from "react-map-gl";
@@ -227,16 +228,16 @@ export default function App(): JSX.Element {
 
     /* ---------- deck.gl layers (v9) ---------- */
     const layers = useMemo(() => {
-        const L: Array<TileLayer<unknown> | BitmapLayer<unknown>> = [];
+        const L: Array<TileLayer<any> | BitmapLayer<any>> = [];
 
         const COMMON_TILE_PROPS: Partial<TileLayerProps<unknown>> = {
             minZoom: 0,
             maxZoom: 16,
-            tileSize: 256,
+            tileSize: 512,
             refinementStrategy: "no-overlap",
             pickable: false,
-            maxRequests: 8,
-            maxCacheSize: 512
+            maxRequests: 10,
+            maxCacheSize: 1024
         };
 
         type BBox = [[number, number], [number, number]];
@@ -439,7 +440,6 @@ export default function App(): JSX.Element {
                 initialViewState={{ longitude: 25.03, latitude: 47.8, zoom: 10 }}
                 controller={{ dragRotate: false }}
                 layers={layers}
-                glOptions={{ antialias: true, stencil: false }}
             >
                 {mapEl}
             </DeckGL>
