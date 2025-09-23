@@ -18,6 +18,10 @@ jobs:
       RELEASE_ROOT: /var/www/geoai-front/releases
 
     steps:
+      - name: Debug token length
+      - run: |
+          echo "::add-mask::$VITE_MAPBOX_TOKEN"
+          echo "VITE_MAPBOX_TOKEN length: ${#VITE_MAPBOX_TOKEN}"
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -41,6 +45,14 @@ jobs:
         run: |
           sudo mkdir -p "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}"
           sudo rsync -a --delete dist/ "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}/"
+
+      # ---- ДОДАЙТЕ ЦІ ДВА КРОКИ ----
+      - name: Set ownership
+        run: sudo chown -R www-data:www-data "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}"
+
+      - name: Set permissions
+        run: sudo chmod -R 755 "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}"
+      # -------------------------------
 
       - name: Switch current symlink atomically
         run: |
