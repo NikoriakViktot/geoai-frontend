@@ -11,17 +11,13 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted  # наш runner на сервері
+    runs-on: self-hosted
 
     env:
       VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
       RELEASE_ROOT: /var/www/geoai-front/releases
 
     steps:
-      - name: Debug token length
-      - run: |
-          echo "::add-mask::$VITE_MAPBOX_TOKEN"
-          echo "VITE_MAPBOX_TOKEN length: ${#VITE_MAPBOX_TOKEN}"
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -31,10 +27,17 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Debug token length
+        run: |
+          echo "::add-mask::$VITE_MAPBOX_TOKEN"
+          echo "VITE_MAPBOX_TOKEN length: ${#VITE_MAPBOX_TOKEN}"
+
       - name: Install deps (clean)
         run: npm ci
 
-      - name: Build
+      - name: Build (prod)
+        env:
+          VITE_MAPBOX_TOKEN: ${{ env.VITE_MAPBOX_TOKEN }}
         run: npm run build
 
       - name: Set release timestamp
@@ -46,18 +49,15 @@ jobs:
           sudo mkdir -p "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}"
           sudo rsync -a --delete dist/ "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}/"
 
-      # ---- ДОДАЙТЕ ЦІ ДВА КРОКИ ----
       - name: Set ownership
         run: sudo chown -R www-data:www-data "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}"
 
       - name: Set permissions
         run: sudo chmod -R 755 "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}"
-      # -------------------------------
 
       - name: Switch current symlink atomically
         run: |
           sudo ln -sfn "$RELEASE_ROOT/${{ steps.vars.outputs.ts }}" /var/www/geoai-front/current
-          # Прибрати дуже старі релізи (старші 30 днів) — опційно
           sudo find "$RELEASE_ROOT" -mindepth 1 -maxdepth 1 -type d -mtime +30 -print0 | sudo xargs -0 -r rm -rf
 
       - name: Reload Nginx
