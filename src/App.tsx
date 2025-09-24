@@ -42,7 +42,7 @@ const PANEL_WIDTH = 300;
 /* ========= Styles ========= */
 const drawerStyle = (open: boolean, pinned: boolean, isDesktop: boolean): CSSProperties => ({
     position: "absolute",
-    top: 50,
+    top: 60,
     left: 10,
     width: PANEL_WIDTH,
     maxHeight: isDesktop ? "80vh" : "100vh",
@@ -508,7 +508,7 @@ export default function App() {
                 onClick={() => setIsOpen((v) => !v)}
                 style={{
                     position: "absolute",
-                    top: 2,
+                    top: 10,
                     left: 10,
                     zIndex: 20,
                     background: "#198754",
