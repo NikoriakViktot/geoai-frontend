@@ -30,7 +30,7 @@ type DemLevelToHand = Record<string, Record<Level, string>>;
 const TC_BASE = import.meta.env.DEV ? "/tc" : "https://geohydroai.org/tc";
 const MAPBOX_TOKEN = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "";
 const HAS_MAPBOX = Boolean(MAPBOX_TOKEN);
-const DASH_HOME = "/";
+const DASH_HOME = "/dashboard";
 
 const COLORS = {
     dem: "#2dd4bf",
@@ -114,11 +114,32 @@ const button: CSSProperties = {
 const parseLevel = (s: Level | string): number =>
     Number(String(s).toLowerCase().replace("m", "").trim());
 
-const buildDemUrl = (dem: string, cmap: string, stretch: Stretch): string =>
-    `${TC_BASE}/singleband/dem/${encodeURIComponent(dem)}/{z}/{x}/{y}.png?colormap=${encodeURIComponent(
-        cmap
-    )}&stretch_range=[${stretch[0]},${stretch[1]}]`;
+// const buildDemUrl = (dem: string, cmap: string, stretch: Stretch): string =>
+//     `${TC_BASE}/singleband/dem/${encodeURIComponent(dem)}/{z}/{x}/{y}.png?colormap=${encodeURIComponent(
+//         cmap
+//     )}&stretch_range=[${stretch[0]},${stretch[1]}]`;
+//
+//
+// const buildFloodUrl = (
+//     dem: string,
+//     hand: string,
+//     level: Level | string,
+//     cmap: string,
+//     stretch: Stretch,
+//     pureBlue = false
+// ): string => {
+//     const layer = `${dem}_${hand}_flood_${level}`;
+//     const base = `${TC_BASE}/singleband/flood_scenarios/${encodeURIComponent(layer)}/{z}/{x}/{y}.png`;
+//     return pureBlue
+//         ? `${base}?colormap=custom&colors=0000ff&stretch_range=[${stretch[0]},${stretch[1]}]`
+//         : `${base}?colormap=${encodeURIComponent(cmap)}&stretch_range=[${stretch[0]},${stretch[1]}]`;
+// };
 
+const buildDemUrl = (dem: string, cmap: string, stretch: Stretch): string =>
+    `${TC_BASE}/singleband/dem/${encodeURIComponent(dem)}/{z}/{x}/{y}.png` +
+    `?colormap=${encodeURIComponent(cmap)}` +
+    `&stretch_range=[${stretch[0]},${stretch[1]}]` +
+    `&resampling=linear`;              // ← додано
 
 const buildFloodUrl = (
     dem: string,
@@ -131,8 +152,8 @@ const buildFloodUrl = (
     const layer = `${dem}_${hand}_flood_${level}`;
     const base = `${TC_BASE}/singleband/flood_scenarios/${encodeURIComponent(layer)}/{z}/{x}/{y}.png`;
     return pureBlue
-        ? `${base}?colormap=custom&colors=0000ff&stretch_range=[${stretch[0]},${stretch[1]}]`
-        : `${base}?colormap=${encodeURIComponent(cmap)}&stretch_range=[${stretch[0]},${stretch[1]}]`;
+        ? `${base}?colormap=custom&colors=0000ff&stretch_range=[${stretch[0]},${stretch[1]}]&resampling=linear`
+        : `${base}?colormap=${encodeURIComponent(cmap)}&stretch_range=[${stretch[0]},${stretch[1]}]&resampling=linear`;
 };
 
 const pickDefaultLevel = (levels: readonly (Level | string)[]): Level | "" => {
