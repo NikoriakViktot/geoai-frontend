@@ -30,7 +30,7 @@ type DemLevelToHand = Record<string, Record<Level, string>>;
 const TC_BASE = import.meta.env.DEV ? "/tc" : "https://geohydroai.org/tc";
 const MAPBOX_TOKEN = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "";
 const HAS_MAPBOX = Boolean(MAPBOX_TOKEN);
-const DASH_HOME = "dem/dashboard";
+const DASH_HOME = "/dashboard";
 
 const COLORS = {
     dem: "#2dd4bf",
