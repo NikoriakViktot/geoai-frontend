@@ -15,6 +15,7 @@ jobs:
 
     env:
       VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+      VITE_DASH_URL: ${{ secrets.VITE_DASH_URL }}
       RELEASE_ROOT: /var/www/geoai-front/releases
 
     steps:
@@ -38,6 +39,7 @@ jobs:
       - name: Build (prod)
         env:
           VITE_MAPBOX_TOKEN: ${{ env.VITE_MAPBOX_TOKEN }}
+          VITE_DASH_URL: ${{ env.VITE_DASH_URL }}
         run: npm run build
 
       - name: Set release timestamp
