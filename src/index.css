@@ -24,8 +24,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  display:block;
+  place-items: initial;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -68,40 +68,33 @@ button:focus-visible {
 }
 
 /* ====================== GeoHydroAI — CORE THEME ====================== */
-
-/* Tokens & control knobs */
+/* ============== TOKENS ============== */
 :root{
-    /* colors */
     --bg-1:#0a1630; --bg-2:#0b1222; --panel:#0f1a2e;
-    --text-1:#DDE8FF; --text-2:#A9BBD8; --muted:#7B8BA6;
+    --text-1:#DDE8FF; --text-2:#C1D0E8; --muted:#7B8BA6;
     --accent:#2563eb; --accent-cyan:#06B6D4;
     --accent-grad:linear-gradient(90deg,#1e3a8a,#2563eb,#0ea5e9,#06b6d4,#22d3ee);
 
-    /* layout */
     --container:1400px;
     --pad:clamp(12px,2vw,24px);
     --header-h:60px;
 
-    /* header visual fade & padding */
     --edge-fade:20px;
     --hdr-pad-y:10px;
-    --hdr-pad-x: 28px;                 /* ← скільки повітря збоку в хедері */
+    --hdr-pad-x:28px;
 
+    /*--hero-logo-shift: clamp(12px, 8vh, 10px);*/
 
-    /* HERO: головний повзунок підйому кульбаби */
-    --hero-logo-shift: clamp(12px, 8vh, 80px);
-
-    /* rhythm */
     --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
     --space-5:24px; --space-6:32px; --space-7:48px; --space-8:72px;
 }
 
-/* Base */
+/* ============== BASE ============== */
 *{ box-sizing:border-box }
 html,body{ height:100% }
 html{ scroll-behavior:smooth }
 body{
-    margin:0; display:block; min-height:100%;
+    margin:0; min-height:100%;
     font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
     color:var(--text-1);
     background:
@@ -113,64 +106,26 @@ body{
 }
 a{ color:#BFD4FF; text-decoration:none }
 a:hover{ color:#E6F0FF; text-decoration:underline; text-underline-offset:3px }
-img{ display:block }
+img{ display:block; max-width:100%; height:auto }
 section[id]{ scroll-margin-top: calc(var(--header-h) + 12px); }
 .gh-container{ max-width:var(--container); margin:0 auto; padding:0 var(--pad) }
+html,body{ overflow-x:hidden; }
 
-/* ====================== Header ====================== */
+/* ============== HEADER (full-bleed) ============== */
 .gh-header{
-    position: sticky; top: 0; z-index: 1000;
-    min-height: var(--header-h);
-    padding-block: var(--hdr-pad-y);
-    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:1000; width:100%;
+    min-height:var(--header-h);
+    padding-block:var(--hdr-pad-y);
     background: linear-gradient(180deg, rgba(11,18,34,.92), rgba(11,18,34,.72));
     backdrop-filter: blur(6px);
-    border-bottom: 1px solid rgba(255,255,255,.06);
-
-    /* fade edges */
-    -webkit-mask-image: linear-gradient(to right,
-    transparent 0, #000 var(--edge-fade),
-    #000 calc(100% - var(--edge-fade)), transparent 100%);
-    mask-image: linear-gradient(to right,
-    transparent 0, #000 var(--edge-fade),
-    #000 calc(100% - var(--edge-fade)), transparent 100%);
+    border-bottom:1px solid rgba(255,255,255,.06);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--edge-fade), #000 calc(100% - var(--edge-fade)), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 var(--edge-fade), #000 calc(100% - var(--edge-fade)), transparent 100%);
 }
-/*.gh-container.gh-header{ padding-inline: calc(var(--pad) + var(--edge-fade)); }*/
-.gh-container.gh-header{
+.gh-header .gh-container{
+    display:flex; align-items:center; justify-content:space-between;
     padding-inline: calc(var(--pad) + var(--edge-fade) + var(--hdr-pad-x));
 }
-
-/* трохи більше на дуже широких екранах */
-@media (min-width: 1440px){
-    .gh-container.gh-header{
-        padding-inline: calc(var(--pad) + var(--edge-fade) + 40px);
-    }
-}
-.gh-header > *{ position:relative; z-index:1 }
-@supports not (mask-image: linear-gradient(#000,#000)){
-    .gh-header::before{
-        content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-        background: linear-gradient(to right,
-        var(--bg-2) 0, transparent var(--edge-fade),
-        transparent calc(100% - var(--edge-fade)), var(--bg-2) 100%);
-    }
-}
-.gh-nav a{ color:#BFD4FF; letter-spacing:.02em; margin-left:clamp(10px,2vw,22px) }
-.gh-nav a:first-child{ margin-left:0 }
-.gh-nav a{
-    position: relative;
-    padding-block: 10px;
-}
-
-.gh-nav a.is-active{
-    color:#E6F0FF; font-weight: 800;
-}
-.gh-nav a.is-active::after{
-    content:""; position:absolute; left:0; right:0; bottom:0;
-    height:2px; background: var(--accent-grad); border-radius:999px;
-}
-
-/* Brand */
 .gh-brand{ display:flex; align-items:center; gap:12px }
 .gh-brand-title{
     display:inline-block; font-weight:1000; letter-spacing:.4px;
@@ -179,108 +134,99 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 12px); }
     text-shadow:0 0 10px rgba(34,211,238,.25), 0 0 18px rgba(37,99,235,.14);
 }
 .gh-brand-lg{ font-size:clamp(30px, 2.4vw + 12px, 56px); line-height:1 }
-.gh-drift{ animation:gh-drift 12s ease-in-out infinite }
 @keyframes gh-drift{ 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+.gh-drift{ animation:gh-drift 12s ease-in-out infinite }
 
-/* Buttons */
-.gh-btn{
-    display:inline-flex; align-items:center; gap:.6ch;
-    padding:clamp(8px,1.2vw,12px) clamp(12px,1.6vw,16px);
-    border-radius:12px; font-weight:800; text-decoration:none; border:0;
+.gh-nav a{ color:#BFD4FF; letter-spacing:.02em; margin-left:clamp(10px,2vw,22px); position:relative; padding-block:10px }
+.gh-nav a:first-child{ margin-left:0 }
+.gh-nav a.is-active{ color:#E6F0FF; font-weight:800 }
+.gh-nav a.is-active::after{
+    content:""; position:absolute; left:0; right:0; bottom:0;
+    height:2px; background: var(--accent-grad); border-radius:999px;
 }
-.gh-btn--primary{ background:#2563eb; color:#fff }
-.gh-btn--primary:hover{ filter:brightness(1.06) }
-.gh-btn--ghost{ background:#101624; border:1px solid #223048; color:var(--text-1) }
-.gh-btn--ghost:hover{ border-color:#2f4367 }
 
-/* ====================== Hero ====================== */
+/* ============== HERO ============== */
 .gh-h1{
     font-weight:800; letter-spacing:-.015em;
     font-size:clamp(30px, 6.2vw, 70px);
     line-height:1.06; margin:0 0 12px;
     text-shadow:0 2px 0 rgba(0,0,0,.24);
 }
-.gh-sub{ color:var(--text-2); font-size:clamp(15px,1.6vw,20px) }
+.gh-sub{
+    color:var(--text-2);
+    font-size:clamp(15px,1.6vw,20px);
+    max-width:clamp(36ch, 90vw, 60ch);
+    margin-inline:auto;
+}
+/* Керуєм одним «важелем» — скільки підняти кульбабу */
+:root{
+    /* підбірка під усі висоти екранів: не менше 14px, не більше 90px */
+    --hero-logo-shift: clamp(14px, 8vh, 80px);
+}
 
+/* Герой */
 .gh-hero{
     min-height: calc(100dvh - var(--header-h));
-    display: grid; place-items: center; text-align: center;
+    display: grid;
+    place-items: center;
+    text-align: center;
     position: relative;
     padding-block: 0 clamp(16px,6vh,72px);
 }
+
+/* Додаємо зверху стільки ж простору, на скільки піднімаємо лого */
 .gh-hero-inner{
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap: clamp(6px,1.2vh,12px);
+    padding-top: var(--hero-logo-shift);     /* ← ключова стрічка */
 }
+
+/* Лого завжди «підняте» */
 .gh-hero-logo{
+    display:block;
     width: clamp(220px, 34vw, 420px);
-    max-height: 42vh; height: auto;
+    max-height: 42vh;
+    height: auto;
     transform: translateY(calc(-1 * var(--hero-logo-shift)));
 }
 
-/* === Scroll cue: контраст + видимість === */
+/* На дуже малих екранах просто трішки зменшуємо лого, але «підйом» лишається */
+@media (max-width: 640px){
+    .gh-hero-logo{ width:min(68vw, 300px); max-height:32vh; }
+}
+
+
+.gh-hero-actions{ display:flex; gap:clamp(30px,1.2vw,20px); flex-wrap:wrap; justify-content:center; }
+.gh-btn{ display:inline-flex; align-items:center; gap:.6ch; padding:clamp(8px,1.2vw,12px) clamp(12px,1.6vw,16px); border-radius:12px; font-weight:800; border:0 }
+.gh-btn--primary{ background:#2563eb; color:#fff }
+.gh-btn--primary:hover{ filter:brightness(1.06) }
+.gh-btn--ghost{ background:#101624; border:1px solid #223048; color:var(--text-1) }
+.gh-btn--ghost:hover{ border-color:#2f4367 }
+
+/* Scroll cue */
 .scroll-cue{
-    position: absolute;
-    left: 50%;
-    bottom: clamp(8px, 3vh, 24px);
-    transform: translateX(-50%);
-    width: 32px;
-    height: 32px;
-    border: 2px solid rgba(255,255,255,.85);   /* було .45 → підсилено */
-    border-radius: 999px;
-    display: grid;
-    place-items: center;
-    color: rgba(255,255,255,.92);               /* для стрілки (::before) */
+    position: absolute; left: 50%; bottom: clamp(8px, 3vh, 24px);
+    transform: translateX(-50%); width: 32px; height: 32px;
+    border: 2px solid rgba(255,255,255,.85); border-radius: 999px;
+    display: grid; place-items: center; color: rgba(255,255,255,.92);
     background: radial-gradient(rgba(0,0,0,.35), rgba(0,0,0,0) 60%);
-    box-shadow:
-            0 0 0 1px rgba(255,255,255,.25) inset,    /* тонкий внутрішній контур */
-            0 0 12px rgba(37,99,235,.35);             /* легка “світлова аура” */
-    backdrop-filter: blur(2px);                 /* відділяє від фону */
-    opacity: .95;
-    transition: opacity .2s, transform .15s;
-    z-index: 2;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.25) inset, 0 0 12px rgba(37,99,235,.35);
+    backdrop-filter: blur(2px); opacity:.95; transition: opacity .2s, transform .15s; z-index:2;
 }
-.scroll-cue:hover,
-.scroll-cue:focus-visible{
-    opacity: 1;
-    transform: translateX(-50%) scale(1.04);
-    border-color: rgba(255,255,255,.95);
-}
-
-/* сама стрілка, використовує currentColor — стане світлішою разом з рамкою */
+.scroll-cue:hover,.scroll-cue:focus-visible{ opacity:1; transform: translateX(-50%) scale(1.04) }
 .scroll-cue::before{
-    content: "";
-    width: 8px; height: 8px;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(45deg) translateY(-2px);
-    animation: cue-bounce 1.4s ease-in-out infinite;
+    content:""; width:8px; height:8px; border-right:2px solid currentColor; border-bottom:2px solid currentColor;
+    transform: rotate(45deg) translateY(-2px); animation: cue-bounce 1.4s ease-in-out infinite;
 }
+@keyframes cue-bounce{ 0%,100%{ transform: rotate(45deg) translateY(-2px) } 50%{ transform: rotate(45deg) translateY(2px) } }
 
-/* доступність: менша анімація для тих, хто її вимикає */
-@media (prefers-reduced-motion: reduce){
-    .scroll-cue::before{ animation: none; }
-}
-
-/* трохи більша ціль на мобайлі */
-@media (max-width: 480px){
-    .scroll-cue{ width: 36px; height: 36px; }
-}
-
-
-@keyframes cue-bounce{
-    0%,100%{ transform: rotate(45deg) translateY(-2px) }
-    50%{    transform: rotate(45deg) translateY(2px) }
-}
-
-/* ====================== Manifesto (document on home) ====================== */
+/* ============== MANIFESTO ============== */
 .mf{
     display:grid; gap:var(--space-6);
     grid-template-columns: 1fr minmax(0,84ch) 1fr;
     padding-block: clamp(24px,6vh,80px);
 }
 .mf > article{ grid-column:2 }
-
 .mf h1{
     font-weight:900; letter-spacing:-.01em;
     font-size:clamp(28px,4.2vw,44px); line-height:1.12;
@@ -296,322 +242,54 @@ section[id]{ scroll-margin-top: calc(var(--header-h) + 12px); }
 .mf li{ position:relative; padding-left:22px; margin:6px 0 }
 .mf li::before{ content:"•"; position:absolute; left:0; top:0; color:var(--accent-cyan); line-height:1.2 }
 .mf strong{ color:#E6F0FF; font-weight:900 }
-.mf .callout{
-    background:var(--panel); border-left:4px solid var(--accent-cyan);
-    border-radius:10px; padding:16px 18px; margin-top:var(--space-6);
+.mf .callout{ background:var(--panel); border-left:4px solid var(--accent-cyan); border-radius:10px; padding:16px 18px; margin-top:var(--space-6) }
+
+/* ============== EXPERTISE CARDS ============== */
+.exp-grid{
+    margin: 8px auto 46px;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.exp-card{
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.28);
+}
+.exp-card h3{ margin:0 0 6px; font-size:18px; font-weight:800 }
+.exp-card p{ color:var(--text-2); margin:0 }
+
+/* ============== FOOTER ============== */
+footer.gh-container{
+    padding:18px 0 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    border-top:1px solid rgba(255,255,255,.08); opacity:.9
 }
 
-/* ====================== Quotes & misc ====================== */
-.gh-quote{
-    background:var(--panel); border-left:4px solid var(--accent-cyan);
-    color:var(--text-1); border-radius:8px; padding:16px 18px;
+/* ============== MOBILE ============== */
+@media (max-width: 640px){
+    body{ background-attachment: scroll; }
+
+    .gh-header{ -webkit-mask-image:none; mask-image:none; }
+    .gh-header .gh-container{ padding-inline:16px; gap:8px }
+    .gh-brand-lg{ font-size: clamp(22px, 6vw, 28px); }
+    .gh-nav{ display:flex; flex-wrap:wrap; gap:8px }
+    .gh-nav a{ margin-left:0; font-size:14px; padding-block:6px }
+
+    .gh-hero{ min-height: calc(100svh - var(--header-h)); padding-block: 8px calc(16px + env(safe-area-inset-bottom)) }
+    .gh-hero-inner{ gap:8px }
+    .gh-hero-logo{ width:min(68vw, 260px); max-height:28vh; transform:none }
+    .gh-h1{ font-size: clamp(22px, 7vw, 28px); line-height:1.15 }
+
+    .mf{ grid-template-columns:1fr; padding-inline:16px }
+    .mf > article{ grid-column:1 }
+    .mf p,.mf li{ overflow-wrap:anywhere; word-break:normal; hyphens:auto }
+
+    .exp-grid{ grid-template-columns:1fr; gap:12px }
+    .exp-card{ padding:14px }
 }
-.gh-hero-actions{
-    display:flex; gap:clamp(30px,1.2vw,20px); flex-wrap:wrap; justify-content:center;
+@media (max-width: 360px){
+    .gh-h1{ font-size:20px }
 }
-
-/*!* ===== (опц.) ШРИФТ =====*/
-/*<link rel="preconnect" href="https://fonts.googleapis.com">*/
-/*<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>*/
-/*<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">*/
-/**!*/
-
-/*!* ===== GeoHydroAI — DARK NAVY THEME ===== *!*/
-
-/*!* Tokens *!*/
-/*:root{*/
-/*    --bg-1:#0a1630;*/
-/*    --bg-2:#0b1222;*/
-/*    --panel:#0f1a2e;*/
-
-/*    --text-1:#DDE8FF;*/
-/*    --text-2:#A9BBD8;*/
-/*    --muted:#7B8BA6;*/
-
-/*    --accent:#2563eb;                 !* blue *!*/
-/*    --accent-cyan:#06B6D4;            !* cyan *!*/
-/*    --accent-grad:linear-gradient(90deg,#1e3a8a,#2563eb,#0ea5e9,#06b6d4,#22d3ee);*/
-/*    --hero-top: clamp(10px, 18vh, 1200px);  !* ↑ можна крутити одним місцем *!*/
-
-/*    --container:1400px;*/
-/*    --pad:clamp(12px,2vw,24px);*/
-/*}*/
-
-/*!* Base *!*/
-/**{ box-sizing:border-box }*/
-/*html,body{ height:100% }*/
-/*body{*/
-/*    margin:0;*/
-/*    font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;*/
-/*    color:var(--text-1);*/
-/*    background:*/
-/*            radial-gradient(1200px 600px at 60% -10%, rgba(58,141,255,.22), transparent 60%),*/
-/*            radial-gradient(900px 420px at 20% 6%, rgba(6,182,212,.16), transparent 55%),*/
-/*            linear-gradient(180deg,var(--bg-1),var(--bg-2) 40%, var(--bg-2));*/
-/*    background-attachment: fixed;*/
-/*    -webkit-font-smoothing:antialiased;*/
-/*    -moz-osx-font-smoothing:grayscale;*/
-/*}*/
-/*a{ color:#BFD4FF; text-decoration:none }*/
-/*a:hover{ color:#E6F0FF; text-decoration:underline; text-underline-offset:3px }*/
-/*img{ display:block }*/
-
-/*!* Layout helper *!*/
-/*.gh-container{ max-width:var(--container); margin:0 auto; padding:0 var(--pad) }*/
-
-/*!* Header *!*/
-/*!* Хедер зверху, з фоном і блюром — не перекривається героєм *!*/
-/*!*.gh-header{*!*/
-/*!*    position: sticky;*!*/
-/*!*    top: 0;*!*/
-/*!*    z-index: 1000;*!*/
-/*!*    padding: 8px 0;*!*/
-/*!*    display: flex;*!*/
-/*!*    align-items: center;*!*/
-/*!*    justify-content: space-between;*!*/
-/*!*    background: linear-gradient(180deg, rgba(11,18,34,.92), rgba(11,18,34,.72));*!*/
-/*!*    backdrop-filter: blur(6px);*!*/
-/*!*    border-bottom: 1px solid rgba(255,255,255,.06);*!*/
-/*!*}*!*/
-/*!* === Параметри, якими зручно крутити === *!*/
-/*:root{*/
-/*    --edge-fade: 20px;      !* ширина “розмитих” країв *!*/
-/*    --hdr-pad-y: 10px;      !* вертикальний паддінг хедера *!*/
-/*}*/
-
-/*!* хедер: більше паддінгу + липкий + фон *!*/
-/*.gh-header{*/
-/*    position: sticky;*/
-/*    top: 0;*/
-/*    z-index: 1000;*/
-/*    min-height: var(--header-h, 60px);*/
-
-/*    !* вертикальні відступи; інлайнові додамо нижче, щоб не ламати .gh-container *!*/
-/*    padding-block: var(--hdr-pad-y);*/
-
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: space-between;*/
-
-/*    background: linear-gradient(180deg, rgba(11,18,34,.92), rgba(11,18,34,.72));*/
-/*    backdrop-filter: blur(6px);*/
-/*    border-bottom: 1px solid rgba(255,255,255,.06);*/
-
-/*    !* плавне “зникання” країв (основний спосіб) *!*/
-/*    -webkit-mask-image: linear-gradient(to right,*/
-/*    transparent 0,*/
-/*    #000 var(--edge-fade),*/
-/*    #000 calc(100% - var(--edge-fade)),*/
-/*    transparent 100%*/
-/*    );*/
-/*    mask-image: linear-gradient(to right,*/
-/*    transparent 0,*/
-/*    #000 var(--edge-fade),*/
-/*    #000 calc(100% - var(--edge-fade)),*/
-/*    transparent 100%*/
-/*    );*/
-/*}*/
-
-/*!* горизонтальний паддінг саме для хедера (бо він ще має .gh-container) *!*/
-/*.gh-container.gh-header{*/
-/*    padding-inline: calc(var(--pad) + var(--edge-fade));  !* ~20px додатково до контейнера *!*/
-/*}*/
-
-/*!* щоб контент не попадав під маску/оверлей *!*/
-/*.gh-header > *{ position: relative; z-index: 1; }*/
-
-/*!* Фолбек, якщо маски недоступні: “нафарбувати” краї кольором фону сторінки *!*/
-/*@supports not (mask-image: linear-gradient(#000,#000)) {*/
-/*    .gh-header::before{*/
-/*        content:"";*/
-/*        position:absolute;*/
-/*        inset:0;*/
-/*        pointer-events:none;*/
-/*        z-index:0;*/
-/*        background: linear-gradient(to right,*/
-/*        var(--bg-2) 0,*/
-/*        transparent var(--edge-fade),*/
-/*        transparent calc(100% - var(--edge-fade)),*/
-/*        var(--bg-2) 100%*/
-/*        );*/
-/*    }*/
-/*}*/
-
-
-/*.gh-nav a{ color:#BFD4FF; letter-spacing:.02em; margin-left:clamp(10px,2vw,22px) }*/
-/*.gh-nav a:first-child{ margin-left:0 }*/
-/*.gh-nav a:hover{ color:#E6F0FF }*/
-
-/*!* Brand *!*/
-/*.gh-brand{ display:flex; align-items:center; gap:12px }*/
-/*.gh-brand-title{*/
-/*    display:inline-block; font-weight:1000; letter-spacing:.4px;*/
-/*    background:var(--accent-grad); background-size:300% 100%;*/
-/*    -webkit-background-clip:text; background-clip:text; color:transparent;*/
-/*    text-shadow:0 0 10px rgba(34,211,238,.25), 0 0 18px rgba(37,99,235,.14);*/
-/*}*/
-/*.gh-brand-lg{ font-size:clamp(30px, 2.4vw + 12px, 56px); line-height:1 }*/
-/*.gh-drift{ animation:gh-drift 12s ease-in-out infinite }*/
-/*@keyframes gh-drift{ 0%{background-position:0% 50%} 100%{background-position:200% 50%} }*/
-/*.at-hero .gh-header .gh-brand img { display:none; }*/
-
-/*!* Buttons *!*/
-/*.gh-btn{*/
-/*    display:inline-flex; align-items:center; gap:.6ch;*/
-/*    padding:clamp(8px,1.2vw,12px) clamp(12px,1.6vw,16px);*/
-/*    border-radius:12px; font-weight:800; text-decoration:none; border:0;*/
-/*}*/
-/*.gh-btn--primary{ background:#2563eb; color:#fff }*/
-/*.gh-btn--primary:hover{ filter:brightness(1.06) }*/
-/*.gh-btn--ghost{ background:#101624; border:1px solid #223048; color:var(--text-1) }*/
-/*.gh-btn--ghost:hover{ border-color:#2f4367 }*/
-
-/*!* Hero *!*/
-/*.gh-h1{*/
-/*    font-weight:800; letter-spacing:-.015em;*/
-/*    font-size:clamp(30px, 6.2vw, 70px);*/
-/*    line-height:1.06; margin:0 0 12px;*/
-/*    text-shadow:0 2px 0 rgba(0,0,0,.24);*/
-/*}*/
-/*.gh-sub{ color:var(--text-2); font-size:clamp(15px,1.6vw,20px) }*/
-
-/*!* Quote *!*/
-/*.gh-quote{*/
-/*    background:var(--panel); border-left:4px solid var(--accent-cyan);*/
-/*    color:var(--text-1); border-radius:8px; padding:16px 18px;*/
-/*}*/
-
-/*!* ===== HERO ===== *!*/
-
-/*.gh-hero-actions{*/
-/*    display: flex;*/
-/*    gap: clamp(8px, 1.2vw, 12px);*/
-/*    flex-wrap: wrap;*/
-/*    justify-content: center;  !* кнопки по центру *!*/
-/*}*/
-
-/*!* 0) Вимкнути центрування від Vite *!*/
-/*body{ display:block; place-items: initial; min-height:100%; }*/
-
-/*!* 1) Висота хедера (підправиш за потреби) *!*/
-/*:root{ --header-h: 60px;*/
-/*    --hero-bottom-gap: clamp(24px, 6vh, 100px); !* повітря знизу героя *!*/
-/*    --hero-logo-shift: clamp(12px, 8vh, 30px); !* на скільки опустити кульбабу *!*/
-/*}*/
-/*.gh-header{ min-height: var(--header-h); }*/
-
-/*!* 2) Hero: весь блок стає на дно вікна і по центру *!*/
-/*.gh-hero{*/
-/*    padding-block: 0 clamp(24px, 6vh, 96px); !* відступ знизу героя *!*/
-/*    text-align: center;*/
-/*}*/
-/*.gh-hero-inner{*/
-/*    min-height: calc(20dvh - var(--header-h));  !* висота екрана мінус хедер *!*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    justify-content: flex-end;  !* ← опускає весь контент донизу *!*/
-/*    align-items: center;*/
-/*    gap: clamp(8px, 2vh, 16px);*/
-/*}*/
-/*.gh-hero-logo{*/
-/*    width: clamp(220px, 34vw, 420px);*/
-/*    max-height: 42vh;*/
-/*    height: auto;*/
-/*    margin-top: 0;*/
-/*    transform: translateY(calc(-1 * var(--hero-logo-shift)));*/
-
-/*}*/
-/*!* ===== Smooth scroll + не ховати якорі під sticky header ===== *!*/
-/*html{ scroll-behavior:smooth; }*/
-/*section[id]{ scroll-margin-top: calc(var(--header-h,60px) + 12px); }*/
-
-/*!* ===== Hero: центр + “крутілка вниз” ===== *!*/
-/*.gh-hero{*/
-/*    min-height: calc(100dvh - var(--header-h,60px));*/
-/*    display: grid;*/
-/*    place-items: center;*/
-/*    text-align: center;*/
-/*    position: relative;*/
-/*    padding-block: 0 clamp(16px,6vh,72px);*/
-/*}*/
-/*.gh-hero-inner{*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    align-items: center;*/
-/*    gap: clamp(6px,1.2vh,12px);*/
-/*}*/
-
-/*!* cue-стрілка вниз *!*/
-/*.scroll-cue{*/
-/*    position: absolute;*/
-/*    left: 50%;*/
-/*    bottom: clamp(8px,3vh,24px);*/
-/*    transform: translateX(-50%);*/
-/*    width: 28px; height: 28px;*/
-/*    border: 2px solid rgba(255,255,255,.45);*/
-/*    border-radius: 999px;*/
-/*    display: grid; place-items: center;*/
-/*    opacity: .85;*/
-/*    transition: opacity .2s;*/
-/*}*/
-/*.scroll-cue:hover{ opacity: 1; }*/
-/*.scroll-cue::before{*/
-/*    content: "";*/
-/*    width: 8px; height: 8px;*/
-/*    border-right: 2px solid currentColor;*/
-/*    border-bottom: 2px solid currentColor;*/
-/*    transform: rotate(45deg) translateY(-2px);*/
-/*    animation: cue-bounce 1.4s ease-in-out infinite;*/
-/*}*/
-/*@keyframes cue-bounce{*/
-/*    0%,100%{ transform: rotate(45deg) translateY(-2px); }*/
-/*    50%{    transform: rotate(45deg) translateY(2px); }*/
-/*}*/
-
-/*!* ===== Manifesto (читабельна колонка) ===== *!*/
-/*:root{*/
-/*    --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;*/
-/*    --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 72px;*/
-/*}*/
-/*.mf{*/
-/*    display: grid;*/
-/*    gap: var(--space-6);*/
-/*    grid-template-columns: 1fr minmax(0, 84ch) 1fr; !* вузька центральна колонка *!*/
-/*    padding-block: clamp(24px,6vh,80px);*/
-/*}*/
-/*.mf > article{ grid-column: 2; }*/
-
-/*.mf h1{*/
-/*    font-weight: 900;*/
-/*    letter-spacing: -.01em;*/
-/*    font-size: clamp(28px, 4.2vw, 44px);*/
-/*    line-height: 1.12;*/
-/*    margin: 0 0 var(--space-4);*/
-/*}*/
-/*.mf h2{*/
-/*    font-weight: 800;*/
-/*    letter-spacing: .02em;*/
-/*    text-transform: uppercase;*/
-/*    opacity: .95;*/
-/*    font-size: clamp(16px, 1.4vw, 18px);*/
-/*    margin: var(--space-7) 0 var(--space-3);*/
-/*}*/
-/*.mf p{ margin: 0 0 var(--space-4); color: var(--text-1); }*/
-/*.mf .lead{ color: var(--text-2); font-size: clamp(16px, 1.5vw, 19px); }*/
-
-/*.mf ul{ margin: var(--space-3) 0 var(--space-4); padding: 0; list-style: none; }*/
-/*.mf li{ position: relative; padding-left: 22px; margin: 6px 0; }*/
-/*.mf li::before{*/
-/*    content: "•"; position: absolute; left: 0; top: 0;*/
-/*    color: var(--accent-cyan); line-height: 1.2;*/
-/*}*/
-
-/*.mf strong{ color: #E6F0FF; font-weight: 900; }*/
-
-/*.mf .callout{*/
-/*    background: var(--panel);*/
-/*    border-left: 4px solid var(--accent-cyan);*/
-/*    border-radius: 10px;*/
-/*    padding: 16px 18px;*/
-/*    margin-top: var(--space-6);*/
-/*}*/

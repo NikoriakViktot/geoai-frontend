@@ -1,32 +1,34 @@
-// src/pages/Home.tsx
 import "../index.css";
-import { useActiveSection } from "../hooks/useActiveSection";   // ← додай
+import { useActiveSection } from "../hooks/useActiveSection";
 const DASH_URL = import.meta.env.VITE_DASH_URL as string;
 
+
 export default function Home() {
-    const sections = ["manifesto","expertise"];      // ← що трекаємо
+    const sections = ["manifesto", "expertise"];
     const active = useActiveSection(sections);
 
     return (
         <div>
-            <header className="gh-container gh-header">
-                <div className="gh-brand">
-                    <span className="gh-brand-title gh-drift gh-brand-lg">GeoHydroAI</span>
+            {/* full-bleed header */}
+            <header className="gh-header">
+                <div className="gh-container">
+                    <div className="gh-brand">
+                        <span className="gh-brand-title gh-drift gh-brand-lg">GeoHydroAI</span>
+                    </div>
+                    <nav className="gh-nav" aria-label="Primary">
+                        <a href="#manifesto" className={active==="manifesto" ? "is-active" : ""}>Manifesto</a>
+                        <a href="#expertise" className={active==="expertise" ? "is-active" : ""}>Expertise</a>
+                    </nav>
                 </div>
-
-                <nav className="gh-nav" style={{ display: "flex", alignItems: "center" }}>
-                    <a href="#manifesto"   className={active==="manifesto"   ? "is-active" : ""}>Manifesto</a>
-                    <a href="#expertise"   className={active==="expertise"   ? "is-active" : ""}>Expertise</a>
-                </nav>
             </header>
 
             <main>
-                {/* ===== HERO ===== */}
+                {/* HERO */}
                 <section className="gh-container gh-hero">
                     <div className="gh-hero-inner">
                         <img src="/logo-hero.png" alt="GeoHydroAI" className="gh-hero-logo" loading="eager" />
                         <h1 className="gh-h1">Align natural laws with technological clarity</h1>
-                        <p className="gh-sub" style={{ maxWidth: 800 }}>
+                        <p className="gh-sub">
                             Physics-first GeoAI for DEM accuracy, flood readiness and hydrological insight — built
                             to reveal structure, not hide it.
                         </p>
@@ -37,12 +39,10 @@ export default function Home() {
                             </a>
                         </div>
                     </div>
-
-                    {/* ↓ «крутілка вниз» веде до маніфесту */}
                     <a className="scroll-cue" href="#manifesto" aria-label="Scroll to Manifesto"></a>
                 </section>
 
-                {/* ===== MANIFESTO на головній ===== */}
+                {/* MANIFESTO */}
                 <section id="manifesto" className="gh-container mf">
                     <article>
                         <header>
@@ -81,24 +81,24 @@ export default function Home() {
                     </article>
                 </section>
 
-                {/* ===== Expertise (як було) ===== */}
-                <section id="expertise" className="gh-container" style={{ margin: "8px auto 46px", display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit, minmax(260px,1fr))" }}>
+                {/* EXPERTISE */}
+                <section id="expertise" className="gh-container exp-grid">
                     {[
                         { t: "Hydro/Hydraulic", d: "HEC-RAS, SWAT+, rating curves, FFA, HAND, unsteady routing." },
                         { t: "Remote Sensing", d: "Sentinel-1 SAR, ICESat-2, xDEM, geomorphons, slope, HAND." },
                         { t: "GeoAI Dashboards", d: "Deck.gl, Mapbox, Terracotta tiles, DEM QA/QC, flood scenarios." },
                     ].map((c) => (
-                        <div key={c.t} style={{ background: "var(--panel)", border: "1px solid rgba(255,255,255,.06)", borderRadius: 14, padding: 16, boxShadow: "0 6px 18px rgba(0,0,0,.28)" }}>
-                            <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800 }}>{c.t}</h3>
-                            <p style={{ color: "var(--text-2)" }}>{c.d}</p>
+                        <div key={c.t} className="exp-card">
+                            <h3>{c.t}</h3>
+                            <p>{c.d}</p>
                         </div>
                     ))}
                 </section>
             </main>
 
-            <footer className="gh-container" style={{ padding: "18px 0 28px", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,.08)", opacity: .9 }}>
+            <footer className="gh-container" role="contentinfo">
                 <span>© {new Date().getFullYear()} GeoHydroAI — Viktor Nikoriak</span>
-                <div style={{ display: "flex", gap: 12 }}>
+                <div style={{ display:"flex", gap:12 }}>
                     <a href="mailto:nikoriakviktor@gmail.com">Email</a>
                     <a href="https://github.com/NikoriakViktot" target="_blank" rel="noreferrer">GitHub</a>
                 </div>
@@ -106,6 +106,3 @@ export default function Home() {
         </div>
     );
 }
-
-
-
